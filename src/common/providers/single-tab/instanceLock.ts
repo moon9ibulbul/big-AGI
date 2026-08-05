@@ -97,6 +97,14 @@ class InstanceLockManager {
     this._useLocks = typeof navigator !== 'undefined' && !!navigator.locks;
     this._snapshot = this._buildSnapshot();
 
+    // Capacitor / Native single-webview context: bypass single-instance lock check entirely
+    const isCapacitor = typeof window !== 'undefined' && !!(window as any).Capacitor;
+    if (isCapacitor) {
+      console.log('[single-tab] Running inside Capacitor/Native app. Bypassing single-instance lock.');
+      this._becomeLeader();
+      return;
+    }
+
     if (typeof BroadcastChannel !== 'undefined') {
       this._channel = new BroadcastChannel(CHANNEL_NAME);
       this._channel.onmessage = (event: MessageEvent<ChannelMessage>) => this._onMessage(event.data);
