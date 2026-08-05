@@ -12,6 +12,7 @@
     "dev-debug": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev-https": "next dev --experimental-https",
     "build": "next build",
+    "build:static": "mv app/api ./api-disabled && (BIG_AGI_BUILD=static next build; mv ./api-disabled app/api) || (mv ./api-disabled app/api; exit 1)",
     "start": "next start",
     "lint": "eslint .",
     "tscheck": "tsc --noEmit --pretty && tsc --noEmit --pretty -p tools/tsconfig.json",
@@ -27,6 +28,8 @@
     "schema": "src/server/prisma/schema.prisma"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -85,6 +88,7 @@
     "zustand": "5.0.14"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@posthog/nextjs-config": "~1.6",
     "@types/node": "^22",
     "@types/nprogress": "^0.2.3",

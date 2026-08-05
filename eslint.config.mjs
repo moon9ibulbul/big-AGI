@@ -26,6 +26,7 @@ export default defineConfig([{
       ".claude/**",                     // agent tooling, own runtime
       "electron/**",                    // excluded from the type program (root tsconfig)
       "tools/video/**",                 // self-contained package, own toolchain
+      "android/**",                     // native android project and build artifacts
     ],
 }, {
 //     // eslint's own base layer (no-dupe-keys, no-cond-assign, no-fallthrough, ...) - next/core-web-vitals

@@ -81,8 +81,12 @@ export function ProviderBackendCapabilities(props: { children: React.ReactNode }
   const [haveCapabilities, storeBackendCapabilities] = useKnowledgeOfBackendCaps();
 
 
+  // Capacitor / Native single-webview context: bypass backend capabilities check entirely
+  const isCapacitor = typeof window !== 'undefined' && (!!(window as any).Capacitor || (window.location.hostname === 'localhost' && window.location.port === '' && /mobile|android|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase())));
+
   // fetch capabilities
   const { data } = apiQuery.backend.listCapabilities.useQuery(undefined, {
+    enabled: !isCapacitor,
     staleTime: Release.Features.BACKEND_REVALIDATE_INTERVAL,
     refetchOnWindowFocus: true, // refetch after a long idle
     refetchOnReconnect: true, // refetch after a network change
@@ -91,6 +95,10 @@ export function ProviderBackendCapabilities(props: { children: React.ReactNode }
 
   // [effect] copy from the backend capabilities payload to the frontend state store
   React.useEffect(() => {
+    if (isCapacitor) {
+      setVersionVerified(true);
+      return;
+    }
     if (data) {
       storeBackendCapabilities(data);
 
@@ -99,7 +107,7 @@ export function ProviderBackendCapabilities(props: { children: React.ReactNode }
       const serverBuildInfo = data.build || {};
       setVersionVerified(clientBuildInfo.gitSha === serverBuildInfo.gitSha && clientBuildInfo.pkgVersion === serverBuildInfo.pkgVersion);
     }
-  }, [data, storeBackendCapabilities]);
+  }, [data, isCapacitor, storeBackendCapabilities]);
 
 
   // [effect] set the timeout flag if waiting too long for the capabilities

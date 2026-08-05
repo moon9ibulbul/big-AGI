@@ -45,7 +45,7 @@ let nextConfig: NextConfig = {
     images: { unoptimized: true },
 
     // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
-    // trailingSlash: true,
+    trailingSlash: true,
   }),
 
   // Allow running builds without racing over .next/ - if set takes precedence over the 'dist' above
